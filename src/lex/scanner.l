@@ -28,7 +28,6 @@ single_line_comment [/]{2}.*
   loc->step();
 %}
 
-";"                         { return yy::parser::token::T_SEMI;     }
 ","                         { return yy::parser::token::T_COMMA;    }
 "."                         { return yy::parser::token::T_POINT;    }
 "{"                         { return yy::parser::token::T_L_BRACE;  }
@@ -51,24 +50,28 @@ single_line_comment [/]{2}.*
 ">="                        { return yy::parser::token::T_MORE_OR_EQUAL; }
 "=="                        { return yy::parser::token::T_EQUALLY;    }
 "!="                        { return yy::parser::token::T_NOT_EQUAL;  }
-"int"                       { return yy::parser::token::T_INT;        }
-"char"                      { return yy::parser::token::T_CHAR;       }
+"INTEGER"                   { return yy::parser::token::T_INTEGER;    }
+"CHAR"                      { return yy::parser::token::T_CHAR;       }
 "string"                    { return yy::parser::token::T_STRING;     }
 "void"                      { return yy::parser::token::T_VOID;       }
-"return"                    { return yy::parser::token::T_RETURN;     }
+"RETURN"                    { return yy::parser::token::T_RETURN;     }
 "IF"                        { return yy::parser::token::T_IF;         }
 "THEN"                      { return yy::parser::token::T_THEN;       }
 "ELSE"                      { return yy::parser::token::T_ELSE;       }
 "END IF"                    { return yy::parser::token::T_END_IF;     }
-"while"                     { return yy::parser::token::T_WHILE;      }
-"class"                     { return yy::parser::token::T_CLASS;      }
-"static"                    { return yy::parser::token::T_STATIC;     }
-"function"                  { return yy::parser::token::T_FUNCTION;   }
-"new"                       { return yy::parser::token::T_NEW;        }
+"DO"                        { return yy::parser::token::T_DO;         }
+"WHILE"                     { return yy::parser::token::T_WHILE;      }
+"LOOP"                      { return yy::parser::token::T_LOOP;       }
+"REM"                       { return yy::parser::token::T_REM;        }
+"FUNCTION"                  { return yy::parser::token::T_FUNCTION;   }
+"END"                       { return yy::parser::token::T_END;        }
+"DIM"                       { return yy::parser::token::T_DIM;        }
+"AS"                        { return yy::parser::token::T_AS;         }
 "outputStr"                 { return yy::parser::token::T_OUTPUTSTR;  }
 "outputInt"                 { return yy::parser::token::T_OUTPUTINT;  }
 "outputChar"                { return yy::parser::token::T_OUTPUTCHAR; }
 "input"                     { return yy::parser::token::T_INPUT;      }
+
 {string_literal}            {
                               val->strType = new std::string(yytext);
                               // std::cout << *val->strType << std::endl;

@@ -233,11 +233,11 @@
 
 %start start
 %token <strType>  L_BRACE R_BRACE L_SQUARE R_SQUARE L_PAREN R_PAREN
-%token <strType>  SEMI COMMA POINT 
+%token <strType>  COMMA POINT 
 %token <strType>  ADD SUB MULT DIV MOD ASSIGN AND OR
 %token <strType>  LESS LESS_OR_EQUAL MORE MORE_OR_EQUAL EQUALLY NOT_EQUAL
-%token <strType>  INT CHAR STRING VOID
-%token <strType>  RETURN IF ELSE WHILE CLASS STATIC NEW FUNCTION THEN END_IF
+%token <strType>  INTEGER CHAR STRING VOID
+%token <strType>  RETURN IF ELSE WHILE REM END THEN END_IF FUNCTION DIM AS DO LOOP
 %token <strType>  STRING_LITERAL
 %token <ch>       ONE_CHAR
 %token <strType>  IDENTIFIER
@@ -285,10 +285,9 @@ method_list:  method method_list  { $$ = new NBlock($1, $2); }
            |  %empty              { $$ = new NBlock(); }
            ;
 
-method: FUNCTION return_type ident L_PAREN arg_list R_PAREN
-        L_BRACE
+method: REM FUNCTION return_type ident L_PAREN arg_list R_PAREN
           statement_list
-        R_BRACE { $$ = new NFuncDec($2, $3, $5, $8); }
+        END FUNCTION { $$ = new NFuncDec($3, $4, $6, $8); }
       ;
 
 return_type:  data_type { $$ = $1; }
@@ -300,28 +299,27 @@ statement_list: statement_init statement_list { $$ = new NBlock($1, $2); }
               | %empty                        { $$ = new NBlock(); }
               ;
 
-statement_init: data_type init  { setTypeInDeclaration($1, $2); $$ = $2; }
+statement_init: DIM init AS data_type { setTypeInDeclaration($4, $2); $$ = $2; }
               ;
 
 init: init_var      { $$ = $1; }
     | init_array    { $$ = $1; }
     ;
 
-init_var: ident init_value SEMI  { $$ = new NVarDec($1, $2); }
+init_var: ident init_value  { $$ = new NVarDec($1, $2); }
         ;
 
-init_value: def_var { $$ = $1; }
-          | %empty  { $$ = NULL; };
+init_value: %empty  { $$ = NULL; };
           ;
 
-init_array: ident alloc SEMI { $$ = new NArrayDeclaration($1, $2); }
+init_array: ident alloc { $$ = new NArrayDeclaration($1, $2); }
           ;
 
-alloc: ASSIGN NEW data_type L_PAREN num_const R_PAREN { $$ = $5; delete $3; }
-     | %empty                                           { $$ = NULL; }
+alloc: ASSIGN data_type L_PAREN num_const R_PAREN { $$ = $4; delete $2; }
+     | %empty                                     { $$ = NULL; }
      ;
 
-statement: ident def SEMI { $$ = createExpressionStatement($1, $2); }
+statement: ident def { $$ = createExpressionStatement($1, $2); }
          | if             { $$ = $1; }
          | while          { $$ = $1; }
          | return         { $$ = $1; }
@@ -333,13 +331,13 @@ output: outputStr   { $$ = $1; }
       | outputChar  { $$ = $1; }
       ;
 
-outputStr: OUTPUTSTR L_PAREN STRING_LITERAL R_PAREN SEMI  { $$ = new NOutputStr(*$3); delete $3; }
+outputStr: OUTPUTSTR L_PAREN STRING_LITERAL R_PAREN  { $$ = new NOutputStr(*$3); delete $3; }
          ;
 
-outputInt: OUTPUTINT L_PAREN term R_PAREN SEMI { $$ = new NOutputInt($3); }
+outputInt: OUTPUTINT L_PAREN term R_PAREN { $$ = new NOutputInt($3); }
          ;
 
-outputChar: OUTPUTCHAR L_PAREN term R_PAREN SEMI { $$ = new NOutputChar($3); }
+outputChar: OUTPUTCHAR L_PAREN term R_PAREN { $$ = new NOutputChar($3); }
           ;
 
 def: def_var       { $$ = $1; }
@@ -443,12 +441,12 @@ else_2: statement_list END_IF  { $$ = $1; }
       | if                     { $$ = new NBlock($1); }
       ;
 
-while:  WHILE L_PAREN term R_PAREN L_BRACE
+while:  DO WHILE L_PAREN term R_PAREN
           statement_list
-        R_BRACE { $$ = new NWhile($3, $6); }
+        LOOP { $$ = new NWhile($4, $6); }
      ;
 
-return: RETURN return_value SEMI  { $$ = new NReturn($2); }
+return: RETURN return_value  { $$ = new NReturn($2); }
       ;
 
 return_value: value_for_var { $$ = $1; }
@@ -463,7 +461,7 @@ condition:  EQUALLY       { $$ = new std::string("=="); }
          |  MORE_OR_EQUAL { $$ = new std::string(">="); }
          ;
 
-data_type:  INT  { $$ = new NIdentifier(std::string("int")); }
+data_type:  INTEGER  { $$ = new NIdentifier(std::string("int")); }
          |  CHAR { $$ = new NIdentifier(std::string("char")); }
          ;
 

@@ -1,61 +1,52 @@
-function int test(int f, int a)
-{
-	int buf = 4;
-	char ch = 'a';
-	// int[] arr = new int[5];
-	int arr = new int(5);
-	arr[3] = 3;
-	// char[] arr2 = new char[5];
-	char arr2 = new char(5);
+REM FUNCTION INTEGER test(INTEGER f, INTEGER a)
+	DIM buf AS INTEGER
+	DIM ch AS CHAR
+	buf = 4
+	ch = 'a'
+	DIM arr = INTEGER(5) AS INTEGER
+	arr[3] = 3
+	DIM arr2 = CHAR(5) AS CHAR
 	IF arr[3] - 3
 	THEN
-		char test;
-		f = 3;
-		outputStr("test");
+		DIM test AS CHAR
+		f = 3
+		outputStr("test")
 	END IF
-	return 4 + arr[2] *a;
-	// return 4 + 4 * 3;
-}
+	RETURN 4 + arr[2] *a
+END FUNCTION
 
-function int cout_iter(int a)
-{
-	return a + 1;
-}
+REM FUNCTION INTEGER cout_iter(INTEGER a)
+	RETURN a + 1
+END FUNCTION
 
-function int Main()
-{
-	int f = 6;
-	int a = f + -4;
+REM FUNCTION INTEGER Main()
+	DIM f AS INTEGER
+	DIM a AS INTEGER
 
-	test(4, f + -4);
+	f = 6
+	a = f + -4
 
-	// a = ((-f || test(4, -f + -4)) + -4 == 3) * 3;
-	// a = f + 3;
+	test(4, f + -4)
 	
-	int b = 5;
-	a = ((b < 4) + -4 < 3) * 3;
-	outputInt(a);
+	DIM b AS INTEGER
+	b = 5
+	a = ((b < 4) + -4 < 3) * 3
+	outputInt(a)
 
-	// int i = cout_iter(2);
-	int i = 0;
-	while (i < 5) {
-		outputStr("loop");
-		outputInt(i);
-		i = i + 1;
-	}
+	DIM i AS INTEGER
+	i = 0
+	DO WHILE (i < 5)
+		outputStr("loop")
+		outputInt(i)
+		i = i + 1
+	LOOP
 
-	int cond = 2;
+	DIM cond AS INTEGER
+	cond = 2
 	IF cond >= 2
 	THEN
-		outputStr("true");
+		outputStr("true")
 	END IF
 
-	// outputStr("test");
-	// outputInt(3);
-	// outputInt(b + b);
-	// char ch = 'd';
-	// ch = 'b';
-	// outputChar(ch);
-
-	return 0;
-}
+	RETURN 0
+END FUNCTION
